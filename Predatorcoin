@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praedatorcoin Mini App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .app-header {
+            background-color: #1f1f1f;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 100%;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-header span {
+            font-size: 1.5em;
+            color: #76c7c0;
+            animation: glow 1s infinite alternate;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-left: 60px; /* Adjusted for vertical nav */
+        }
+
+        .currency-display, .level-display {
+            margin: 20px 0;
+        }
+
+        .currency-display button {
+            margin-left: 10px;
+            background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            color: #ffffff;
+            cursor: pointer;
+            animation: gradient 3s infinite;
+        }
+
+        .currency-display button:hover {
+            box-shadow: 0 0 10px #76c7c0;
+        }
+
+        .progress-bar {
+            width: 100px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0;
+            height: 100%;
+            background-color: #76c7c0;
+            animation: progress 2s infinite;
+        }
+
+        .vertical-nav {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 60px;
+            background-color: #1f1f1f;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .vertical-nav button {
+            background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff);
+            border: none;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            color: #ffffff;
+            cursor: pointer;
+            animation: gradient 3s infinite;
+        }
+
+        .vertical-nav button:hover {
+            box-shadow: 0 0 10px #76c7c0;
+        }
+
+        .clickable-image img {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            animation: spin 5s linear infinite;
+        }
+
+        .mining-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .mining-section button {
+            margin-top: 10px;
+            background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            color: #ffffff;
+            cursor: pointer;
+            animation: gradient 3s infinite;
+        }
+
+        .mining-machine {
+            width: 100px;
+            height: 100px;
+            background-color: #333;
+            border-radius: 10px;
+            margin: 10px auto;
+            position: relative;
+            box-shadow: 0 0 10px #76c7c0;
+        }
+
+        .machine-animation {
+            width: 100%;
+            height: 100%;
+            background: url('mining.gif') no-repeat center center;
+            background-size: cover;
+            display: none;
+        }
+
+        .boost-section {
+            margin-top: 20px;
+        }
+
+        .light-theme {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+            .vertical-nav {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="vertical-nav">
+        <button>Nav 1</button>
+        <button>Nav 2</button>
+        <button>Nav 3</button>
+    </div>
+    <div class="main-content">
+        <div class="app-header">
+            <div class="main-header">
+                <span>Praedatorcoin Mini App</span>
+                <button id="theme-toggle">Toggle Theme</button>
+            </div>
+        </div>
+        <div class="currency-display">
+            <button>Currency</button>
+        </div>
+        <div class="level-display">
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+        <div class="mining-section">
+            <div class="mining-machine">
+                <div class="machine-animation"></div>
+            </div>
+            <button>Start Mining</button>
+        </div>
+    </div>
+    <script>
+        const toggleButton = document.getElementById('theme-toggle');
+        toggleButton.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+        });
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD7D8FNy3gvBT9yKuPIpfkTxHE5Q1U2f84",
+            authDomain: "predatorcoin-51b5f.firebaseapp.com",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "predatorcoin-51b5f",
+            storageBucket: "predatorcoin-51b5f.appspot.com",
+            messagingSenderId: "582271141436",
+            appId: "1:582271141436:web:07ca9a84a6f512ba82a539"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+
+        // Telegram API Token
+        const telegramApiToken = "7541832444:AAHxXyANWQVVzr91-JASLnP1G8pwR8hqcMM";
+    </script>
+</body>
+</html>
